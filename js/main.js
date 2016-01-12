@@ -11,7 +11,7 @@ $(function(){
     },
     init: function() {
       this.kitty = new model.Cat("Kitty", "images/cat1.jpg");
-      this.cat = new model.Cat("Cat", "images/cat2.jpg");
+      this.tweety = new model.Cat("Tweety", "images/cat2.jpg");
       this.meow = new model.Cat("Meow", "images/cat3.jpg");
       this.sylvestor = new model.Cat("Sylvestor", "images/cat4.jpg");
       this.puddy = new model.Cat("Puddy", "images/cat5.jpg");
@@ -44,13 +44,11 @@ $(function(){
       this.catImg = $('#' + cat.name + 'img' );
       this.catImg.click(function () {
         octopus.clickCat(cat);
-        console.log(cat);
       });
     },
     updateCount: function(cat) {
       this.catImg = $('#' + cat.name );
       htmlStr = '<h3 id="' + cat.name + '">Count ' + cat.count + '</h3>';
-      console.log(cat.count);
       this.catImg.replaceWith(htmlStr);
     }
   };
@@ -77,17 +75,18 @@ $(function(){
       this.admin.html(htmlStr);
 
       this.cancel = $('#adminCancel');
-      this.save = $('#adminSave');
-      this.catName = $('#adminCatName').val();
-      this.catImg = $('#adminCatImg').val();
-      this.catCount = $('#adminCatCount').val();
-      console.log(this.catName);
       this.cancel.click(function() {
         admin.toggle();
       });
+      var cat = cat;
+      this.save = $('#adminSave');
       this.save.click(function() {
-        octopus.updateCat(cat,this.catName, this.catImg, this.catCount);
-        admin.toggle();
+        var newName = $('#adminCatName'),
+          newImg = $('#adminCatImg'),
+          newCount = $('#adminCatCount');
+          console.log(cat);
+        octopus.updateCat(newName,newImg,newCount);
+        admin.toggle(cat);
       });
     }
   };
@@ -113,11 +112,13 @@ $(function(){
         admin.renderCatAdmin(cat);
       });
     },
-    updateCat: function(cat,catName,catImg,catCount) {
-      model.cat.name = catName;
-      model.cat.img = catImg;
-      model.cat.count = catCount;
-      admin.renderCatAdmin(cat);
+    updateCat: function(newName,newImg,newCount) {
+      console.log(newName.val());
+      model.currentCat.name = newName.val();
+      model.currentCat.img = newImg.val();
+      model.currentCat.count = newCount.val();
+      listView.init();
+      catView.init(model.currentCat);
     }
   };
 
